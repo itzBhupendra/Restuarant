@@ -1,0 +1,63 @@
+using System;
+using System.Runtime.InteropServices;
+using System.Text;
+
+class MainframeEHLLAPI
+{
+    // EHLLAPI function declarations
+    [DllImport("hllapi32.dll")] // Replace with the correct DLL name for your emulator
+    private static extern short hllapi(out int Func, ref int RetC, StringBuilder Data);
+
+    static void Main(string[] args)
+    {
+        try
+        {
+            int rc; // Return code
+            int func; // Function code
+
+            // Function Code 1: Connect to Emulator Session
+            func = 1;
+            StringBuilder data = new StringBuilder(8);
+            hllapi(out func, ref rc, data);
+            Console.WriteLine("Connect to Emulator Session: Return Code = " + rc);
+
+            // Function Code 2: Connect Presentation Space
+            func = 2;
+            data.Clear();
+            hllapi(out func, ref rc, data);
+            Console.WriteLine("Connect Presentation Space: Return Code = " + rc);
+
+            // Function Code 3: Start Host Session
+            func = 3;
+            data.Clear();
+            hllapi(out func, ref rc, data);
+            Console.WriteLine("Start Host Session: Return Code = " + rc);
+
+            // Function Code 4: Set Cursor Location (optional)
+            func = 4;
+            data.Clear();
+            data.Append("\x01\x01"); // Row and column values
+            hllapi(out func, ref rc, data);
+            Console.WriteLine("Set Cursor Location: Return Code = " + rc);
+
+            // Function Code 5: Send String (Send Keys)
+            func = 5;
+            data.Clear();
+            string command = "YOUR_COMMAND"; // Replace with the command to fetch data
+            data.Append(command);
+            hllapi(out func, ref rc, data);
+            Console.WriteLine("Send String (Send Keys): Return Code = " + rc);
+
+            // Function Code 6: Get Data (Retrieve)
+            func = 6;
+            data.Clear();
+            hllapi(out func, ref rc, data);
+            Console.WriteLine("Get Data (Retrieve): Return Code = " + rc);
+            Console.WriteLine("Retrieved Data: " + data.ToString());
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error: " + ex.Message);
+        }
+    }
+}
